@@ -1,11 +1,12 @@
 from flask import Flask
 from flask_login import LoginManager
 from config import config
-
-from .database import Database
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 login = LoginManager()
-db = Database()
+db = SQLAlchemy()
+migrate = Migrate()
 
 def create_app(config_name):
     app = Flask(__name__)
@@ -14,6 +15,7 @@ def create_app(config_name):
     
     login.init_app(app)
     db.init_app(app)
+    migrate.init_app(app,db)
 
     from .articles import articles as articles_blueprint
     app.register_blueprint(articles_blueprint)
